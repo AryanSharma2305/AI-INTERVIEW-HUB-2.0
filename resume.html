@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Hub 2.0 | AI Resume Helper</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(to bottom, #1a1a1a, rgba(0, 0, 0, 0.7));
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin: 0;
+            color: #ffeb3b;
+            text-shadow: 4px 6px 15px rgba(255, 235, 59, 0.7);
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://source.unsplash.com/1920x1080/?luxury,technology') no-repeat center/cover;
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1.2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 2rem;
+            color: #ffd700;
+            text-shadow: 3px 3px 10px rgba(255, 215, 0, 0.6);
+        }
+
+        .features {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(50, 50, 50, 0.8));
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem;
+            flex: 1;
+            min-width: 300px;
+            max-width: 350px;
+            text-align: center;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .feature-card img {
+            width: 80px;
+            margin-bottom: 1.2rem;
+            filter: drop-shadow(0 5px 10px rgba(255, 255, 255, 0.4));
+        }
+
+        .feature-card h3 {
+            font-size: 1.8rem;
+            color: #ffab40;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #ccc;
+            font-size: 1rem;
+        }
+
+        .file-upload, .ai-helper {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .file-upload label {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload input {
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff914d, #ff512f);
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.4s ease;
+        }
+
+        .file-upload input:hover {
+            background: linear-gradient(45deg, #ff7b00, #e64520);
+        }
+
+        .ai-helper button {
+            background: linear-gradient(45deg, #ff512f, #dd2476);
+            color: #fff;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .ai-helper button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .feedback {
+            text-align: center;
+        }
+
+        canvas {
+            display: block;
+            margin: 2rem auto;
+            max-width: 100%;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            font-size: 1.1rem;
+            color: #ffd700;
+            box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        footer a {
+            color: #ffd700;
+            text-decoration: none;
+            transition: text-shadow 0.4s;
+        }
+
+        footer a:hover {
+            text-shadow: 0 0 10px #ffd700;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .action-buttons button {
+            background-color: #28a745;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .action-buttons button:hover {
+            background-color: #218838;
+        }
+
+        .upload-again {
+            background-color: #dc3545;
+        }
+
+        .upload-again:hover {
+            background-color: #c82333;
+        }
+        .loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(52, 73, 94, 0.9); /* Dark semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure it is on top of other elements */
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.loading-text {
+    font-size: 2.5rem;
+    animation: textAnimation 1.5s ease-in-out infinite; /* Animated text */
+}
+
+.loading-subtext {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    opacity: 0.8;
+    animation: fadeIn 1s ease forwards;
+    color: #ffffff; /* Changed to white for better visibility */
+}
+
+.loading-spinner {
+    border: 8px solid rgba(255, 255, 255, 0.3);
+    border-top: 8px solid #ff9900; /* Spinner color */
+    border-radius: 50%;
+    width: 80px; /* Increased size for better visibility */
+    height: 80px;
+    animation: spin 1s linear infinite; /* Spinner animation */
+    margin: 20px auto;
+}
+
+/* Text Animation */
+@keyframes textAnimation {
+    0%, 100% {
+        transform: scale(1);
+        color: #ff9900; /* Color change */
+    }
+    50% {
+        transform: scale(1.1);
+        color: #ffffff; /* Color change */
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AI Resume Helper</h1>
+    </header>
+    <!-- Loading Animation -->
+<div id="loading" class="loading-screen">
+    <div class="loading-content">
+        <h1 class="loading-text">Loading AI Resume Helper...</h1>
+        <div class="loading-spinner"></div>
+        <p class="loading-subtext">Please wait while we prepare your experience...</p>
+    </div>
+</div>
+
+    <div class="container">
+        <h2>Transform Your Resume with AI</h2>
+
+        <div class="features">
+            <div class="feature-card">
+                <img src="https://img.icons8.com/color/96/ai.png" alt="AI Analysis">
+                <h3>AI Analysis</h3>
+                <p>Let AI evaluate your resume and provide actionable feedback to stand out in your field.</p>
+            </div>
+            <div class="feature-card">
+                <img src="https://img.icons8.com/color/96/document.png" alt="Resume Builder">
+                <h3>Resume Builder</h3>
+                <p>Create a stunning, professional resume in minutes with our guided AI tools.</p>
+            </div>
+            <div class="feature-card">
+                <img src="https://img.icons8.com/color/96/positive-dynamic.png" alt="Scoring System">
+                <h3>Scoring System</h3>
+                <p>Get a detailed score and tips to improve your resume for maximum impact.</p>
+            </div>
+        </div>
+
+        <div class="file-upload">
+            <label for="resumeUpload">Upload Your Resume (PDF/DOCX)</label>
+            <input type="file" id="resumeUpload" accept=".pdf, .docx">
+        </div>
+
+        <div class="ai-helper">
+            <p>Don’t have a resume? No worries!</p>
+            <a href="https://www.canva.com/create/resumes/" target="_blank">
+                <button id="createResume">Create Your Resume</button>
+            </a>
+        </div>
+        
+        
+
+        <div class="feedback" id="feedbackSection">
+            <canvas id="scoreChart" width="400" height="400"></canvas>
+            <p id="scoreMessage"></p>
+            <ul id="feedbackList"></ul>
+        </div>
+
+        <div class="action-buttons">
+            <button id="doneButton">Done</button>
+            <button id="uploadAgainButton" class="upload-again">Upload Again</button>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 AI Resume Helper | <a href="https://www.canva.com/create/resumes/" target="_blank">Start Building Your Resume Now</a>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Hide loading screen on page load
+window.addEventListener('load', function () {
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.opacity = '0'; // Fade out
+    setTimeout(() => {
+        loadingScreen.style.display = 'none'; // Hide after fade out
+    }, 500); // Match with CSS transition duration
+});
+
+// Show loading screen on network issues
+window.addEventListener('beforeunload', function() {
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.display = 'flex'; // Show loading screen
+});
+
+// Show loading screen on resume upload
+const resumeUpload = document.getElementById('resumeUpload');
+
+        const createResume = document.getElementById('createResume');
+        const doneButton = document.getElementById('doneButton');
+        const uploadAgainButton = document.getElementById('uploadAgainButton');
+        const scoreMessage = document.getElementById('scoreMessage');
+        const feedbackList = document.getElementById('feedbackList');
+        const scoreChart = document.getElementById('scoreChart');
+
+        function analyzeResume(file) {
+    // Check if the file is a resume (for demo purposes, we'll assume a resume has the word "resume" in its name)
+    if (file.name.toLowerCase().includes("resume")) {
+        return {
+            score: Math.floor(Math.random() * 100), // Random score for demo purposes
+            feedback: [
+                "Improve the summary section.",
+                "Use bullet points for easier readability.",
+                "Highlight key skills and achievements.",
+                "Make sure your resume is ATS-friendly."
+            ]
+        };
+    } else {
+        return null; // Return null if the file is not a resume
+    }
+}
+
+// Update the event listener to handle the case where the file is not a resume
+resumeUpload.addEventListener('change', () => {
+    const file = resumeUpload.files[0];
+    if (file) {
+        const resumeData = analyzeResume(file);
+        if (resumeData) {
+            updateFeedback(resumeData);
+        } else {
+            alert("Please upload a resume file.");
+        }
+    }
+});
+
+        function updateFeedback(data) {
+            scoreMessage.textContent = `Your Resume Score: ${data.score}/100`;
+
+            // Clear previous feedback
+            feedbackList.innerHTML = '';
+
+            // Generate feedback list
+            data.feedback.forEach(feedback => {
+                const li = document.createElement('li');
+                li.textContent = feedback;
+                feedbackList.appendChild(li);
+            });
+
+            // Update the chart
+            new Chart(scoreChart, {
+                type: 'pie',
+                data: {
+                    labels: ['Score', 'Remaining'],
+                    datasets: [{
+                        data: [data.score, 100 - data.score],
+                        backgroundColor: ['#ffeb3b', '#555'],
+                        hoverBackgroundColor: ['#ffcc00', '#333']
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        resumeUpload.addEventListener('change', () => {
+            const file = resumeUpload.files[0];
+            if (file) {
+                const resumeData = analyzeResume(file);
+                updateFeedback(resumeData);
+            }
+        });
+
+        doneButton.addEventListener('click', () => {
+    if (!resumeUpload.files.length) {
+        // If no file is uploaded, show a notification
+        alert("Please upload your resume before proceeding.");
+    } else {
+        window.location.href = 'aptitude.html'; // Redirect to next page (replace with your next page URL)
+    }
+});
+        uploadAgainButton.addEventListener('click', () => {
+            window.location.reload(); // Refresh the page
+        });
+        document.getElementById("resumeUpload").addEventListener("change", (event) => {
+    const fileName = event.target.files[0]?.name || "No file selected";
+    alert(`Uploaded: ${fileName}`);
+});
+
+    </script>
+</body>
+</html>

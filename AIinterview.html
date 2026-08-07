@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Hub 2.0 | Chat and Video Interviews</title>
+    <link rel="icon" href="icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="interview.css">
+    <style>
+        /* Luxurious and Modern Design */
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Poppins', sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .container {
+            margin-top: 50px;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .text-center h1 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+            animation: slideInLeft 0.7s ease-in-out;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .text-center p {
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.8);
+            animation: slideInRight 0.7s ease-in-out;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .feedback-window {
+            display: none;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom : 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #videoOutput, #feedbackOutput, #chatBox {
+            height: 200px;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .pie-chart {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .feedback-suggestions {
+            margin-top: 10px;
+        }
+
+        .congratulatory-image {
+            width: 100px;
+            height: 100px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .try-again-button {
+            margin-top: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Loading Screen Styles */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-text {
+            font-size: 2.5rem;
+            animation: textAnimation 1.5s ease-in-out infinite;
+        }
+
+        .loading-subtext {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            opacity: 0.8;
+            animation: fadeIn 1s ease forwards;
+            color: #ff9900;
+        }
+
+        .loading-spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid #ff9900;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        /* Text Animation */
+        @keyframes textAnimation {
+            0%, 100% {
+                transform: scale(1);
+                color: #ff9900;
+            }
+            50% {
+                transform: scale(1.1);
+                color: #ff9900;
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+<div id="loading" class="loading-screen">
+    <div class="loading-content">
+        <h1 class="loading-text">Loading AI Interview Hub 2.0...</h1>
+        <div class="loading-spinner"></div>
+        <p class="loading-subtext">Please wait while we prepare your experience...</p>
+    </div>
+</div>
+    <div class="container">
+        <div class="text-center">
+            <h1>AI Interview Hub 2.0</h1>
+            <p>Select a course and an interview type to begin.</p>
+        </div>
+        <div class="card">
+            <h5>Select Course</h5>
+            <select id="courseSelect" class="form-control mb-3">
+                <option value="" selected disabled>Select a course</option>
+                <option value="data-science">Data Science</option>
+                <option value="software-engineering">Software Engineering</option>
+                <option value="project-management">Project Management</option>
+                <option value="digital-marketing">Digital Marketing</option>
+                <option value="finance">Finance</option>
+                <option value="artificial-intelligence">Artificial Intelligence</option>
+                <option value="cloud-computing">Cloud Computing</option>
+                <option value="cyber-security">Cyber Security</option>
+                <option value="business-analytics">Business Analytics</option>
+            </select>
+
+            <h5>Select Interview Type</h5>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="startChatInterview()">Chat Interview</button>
+                <button class="btn btn-primary" onclick="startRealTimeInterview()">Real-Time Interview</button> <!-- Changed to btn-primary -->
+                <button class="btn btn-primary" onclick="startVideoInterview()">One-Way Video Call Interview</button> <!-- Changed to btn-secondary -->
+            </div>
+        </div>
+
+        <!-- Chat Interview Section -->
+        <div class="chat-window card" style="display: none;">
+            <h5>AI Chat Interview</h5>
+            <div id="chatBox" class="border p-3 mb-3"></div>
+            <input type="text" id="chatInput" class="form-control mb-3" placeholder="Type your answer here...">
+            <button class="btn btn-primary" onclick="submitChatResponse()">Submit Response</button>
+        </div>
+
+        <!-- Video Call Interview Section -->
+        <div class="video-call-window card" style="display: none;">
+            <h5>AI Video Call Interview</h5>
+            <video id="videoElement" autoplay></video>
+            <p id="videoOutput">The AI will ask questions. Please respond via microphone.</p>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="startAIQuestions()">Start Interview</button>
+                <button class="btn btn-danger mt-3" onclick="endVideoInterview()">Finish Interview</button>
+            </div>
+        </div>
+
+        <!-- Feedback Section -->
+        <div class="feedback-window card" style="display: none;">
+            <h5>Interview Feedback and Performance</h5>
+            <canvas id="feedbackChart" class="pie-chart"></canvas>
+            <div id="feedbackOutput"></div>
+            <div class="feedback-suggestions">
+                <h6>Suggestions for Improvement:</h6>
+                <ul id="suggestionsList"></ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let videoResponses = [];
+        let chatResponses = [];
+        let currentVideoQuestionIndex = 0;
+        let currentChatQuestionIndex = 0;
+        let videoStream;
+        let recognition;
+        let correctResponses = 0;
+        let incompleteResponses = 0;
+        let irrelevantResponses = 0;
+        let selectedCourseQuestions = [];
+        let selectedVideoQuestions = [];
+
+        const videoQuestions = [
+            "Tell me about yourself.",
+            "What are your strengths?",
+            "Describe a challenge you faced and how you overcame it.",
+            "Why should we hire you?",
+            "Where do you see yourself in five years?",
+            "How do you handle stress and pressure?"
+        ];
+
+        const chatQuestions = [
+            "What makes you interested in this role?",
+            "Can you describe your experience related to the job?",
+            "How do you manage your time?",
+            "What motivates you in the workplace?",
+            "Can you explain a project you have worked on?"
+        ];
+
+        
+const courseQuestions = {
+    "data-science": {
+        chatQuestions: [
+            "What makes you interested in Data Science?",
+            "Can you describe a Data Science project you've worked on?",
+            "How do you handle large datasets?",
+            "What tools do you use for data visualization?",
+            "Can you explain a machine learning algorithm you are familiar with?",
+            "What is overfitting in machine learning, and how can it be avoided?",
+            "How do you handle missing data in a dataset?",
+            "Explain the difference between supervised and unsupervised learning?",
+            "What is cross-validation and why is it used?",
+            "Can you explain the concept of a confusion matrix?"
+        ],
+        videoQuestions: [
+            "Tell me about a time you solved a complex data problem.",
+            "What is your approach to cleaning data?",
+            "Describe a challenge you faced in a Data Science project and how you handled it.",
+            "How do you keep up with new trends in Data Science?",
+            "What are your strengths in Data Science?",
+            "Explain a data science project you've worked on and your role in it?",
+            "What is the significance of p-value in statistical analysis?",
+            "How would you explain the concept of A/B testing to a non-technical person?",
+            "What are precision and recall? How do they differ?",
+            "What is dimensionality reduction and why is it useful?"
+        ]
+    },
+    "software-engineering": {
+        chatQuestions: [
+            "What programming languages are you proficient in?",
+            "Can you explain the software development lifecycle?",
+            "How do you handle debugging code?",
+            "What is your experience with version control systems?",
+            "Describe a project where you implemented a software solution.",
+            "What is the difference between Agile and Waterfall methodologies?",
+            "How would you manage version control in a team project?",
+            "Can you explain SOLID principles in software development?",
+            "What are microservices, and how do they differ from monolithic architectures?",
+            "How do you approach debugging a complex software issue?",
+            "Explain the concept of continuous integration and its importance.",
+            "What is the difference between functional and non-functional requirements?",
+            "Describe the software development lifecycle (SDLC).",
+            "How do you ensure code quality in a large software project?",
+            "What is the purpose of unit testing in software development?"
+        ],
+        videoQuestions: [
+            "Tell me about a software engineering project you led.",
+            "How do you ensure code quality?",
+            "Describe a time when you had to solve a tough technical problem.",
+            "What are your favorite software design patterns?",
+            "Where do you see software engineering evolving in the next 5 years?",
+            "Describe a challenging software project and how you contributed to its success.",
+            "What are design patterns, and why are they important?",
+            "How would you refactor a piece of code to improve its performance?",
+            "What is the purpose of code reviews, and how do you conduct one?",
+            "Explain the difference between RESTful and SOAP APIs.",
+        ]
+    },
+    "project-management": {
+        chatQuestions: [
+            "What project management tools are you familiar with?",
+            "How do you manage project deadlines?",
+            "Can you describe a successful project you managed?",
+            "How do you handle changes in project scope?",
+            "How do you manage team conflicts?",
+            "What is the role of a project manager in a team?",
+            "How do you manage project risks?",
+            "What tools do you use for project scheduling?",
+            "How do you ensure that a project stays on budget?",
+            "What is the difference between a milestone and a deliverable?",
+            "What is stakeholder management, and why is it important?",
+        ],
+        videoQuestions: [
+            "Tell me about a challenging project and how you handled it.",
+            "How do you prioritize tasks in a project?",
+            "What is your experience with Agile methodologies?",
+            "How do you ensure stakeholder satisfaction?",
+            "Where do you see the future of project management heading?",
+            "Describe a project you managed from start to finish.",
+            "What is earned value management (EVM), and how do you use it?",
+            "How do you handle changes in project requirements?",
+            "What is the importance of a project kickoff meeting?",
+            "Explain how you would prioritize tasks in a complex project",
+
+        ]
+    },
+    "digital-marketing": {
+        chatQuestions: [
+            "What digital marketing tools do you use?",
+            "Can you describe a successful digital marketing campaign you've worked on?",
+            "How do you measure the success of a digital marketing strategy?",
+            "What is your approach to SEO?",
+            "How do you stay updated with trends in digital marketing?",
+            "What are the key components of a digital marketing strategy?",
+            "How do you measure the success of a digital marketing campaign?",
+            "What is SEO, and why is it important?",
+            "Explain the difference between organic and paid traffic.",
+            "What is the role of content marketing in digital marketing?"
+        ],
+        videoQuestions: [
+            "Tell me about a challenge you faced in digital marketing and how you overcame it.",
+            "How do you allocate budgets for a digital marketing campaign?",
+            "What is your experience with social media marketing?",
+            "How do you measure ROI in digital marketing?",
+            "Where do you see the future of digital marketing?",
+            "Describe a successful digital marketing campaign you worked on.",
+            "What are the current trends in digital marketing?",
+            "How do you use analytics to optimize marketing campaigns?",
+            "What is the role of influencer marketing in a digital strategy?",
+            "Explain the importance of video content in digital marketing."
+        ]
+    },
+    "finance": {
+        chatQuestions: [
+            "What interests you about finance?",
+            "Can you explain financial statements and their importance?",
+            "How do you stay informed about financial markets?",
+            "What is your experience with financial modeling?",
+            "Describe a project where you analyzed financial data.",
+            "What is the difference between gross and net income?",
+            "How do you evaluate a company's financial health?",
+            "What is the time value of money, and why is it important?",
+            "Can you explain the concept of compounding interest?",
+            "How do you assess the risk of an investment?"
+        ],
+        videoQuestions: [
+            "Tell me about a financial challenge you faced and how you handled it.",
+            "What is your experience with risk management?",
+            "How do you make investment decisions?",
+            "What financial software tools have you used?",
+            "Where do you see the financial industry heading in the next 5 years?",
+            "Describe a time when you analyzed a company’s financial statements.",
+            "What are the key ratios used to evaluate a company’s profitability?",
+            "How would you structure a business's budget for a new project?",
+            "What is the purpose of capital budgeting, and how is it done?",
+            "Explain how you would handle a situation where a company is facing liquidity issues."
+        ]
+    },
+    "artificial-intelligence": {
+        chatQuestions: [
+            "What excites you about Artificial Intelligence?",
+            "Can you explain the difference between AI, Machine Learning, and Deep Learning?",
+            "How do you approach an AI-related problem?",
+            "What are the ethical implications of AI?",
+            "Can you describe an AI project you've worked on?",
+            "What is the difference between AI, machine learning, and deep learning?",
+            "How does natural language processing (NLP) work?",
+            "What is a neural network, and how is it trained?",
+            "How do you avoid bias in AI algorithms?",
+            "Can you explain reinforcement learning?",
+            "What are some ethical concerns surrounding AI?",
+            "How does computer vision work in AI?",
+            "What is the role of AI in autonomous vehicles?",
+            "How is AI being used in healthcare?",
+            "What are the limitations of AI today?"
+        ],
+        videoQuestions: [
+            "Tell me about an AI challenge you solved.",
+            "How do you ensure fairness in AI algorithms?",
+            "Describe a time when an AI model you developed failed.",
+            "How do you stay updated with advancements in AI?",
+            "What role do you think AI will play in the future?",
+            "Describe a project where you used AI to solve a problem.",
+            "What are the differences between supervised and unsupervised learning?",
+            "How do you ensure the scalability of AI systems?",
+            "Explain the concept of transfer learning in AI.",
+            "What are the challenges of deploying AI in real-world applications?",
+            "How would you explain AI to a non-technical audience?",
+            "What role does big data play in AI development?",
+            "What is the future of AI in business operations?",
+            "How do you approach training an AI model with limited data?",
+            "What is the impact of AI on job markets and employment?"
+        ]
+    },
+    "cloud-computing": {
+        chatQuestions: [
+            "What is your experience with cloud platforms?",
+            "Can you explain the difference between IaaS, PaaS, and SaaS?",
+            "How do you ensure cloud security?",
+            "What are the advantages of using cloud computing?",
+            "Describe a project where you implemented a cloud solution.",
+            "What is cloud computing, and how does it differ from traditional IT infrastructure?",
+            "Explain the difference between IaaS, PaaS, and SaaS.",
+            "How do you ensure security in cloud environments?",
+            "What is serverless computing, and what are its benefits?",
+            "How would you migrate an on-premise application to the cloud?"
+        ],
+        videoQuestions: [
+            "Tell me about a time you solved a cloud infrastructure issue.",
+            "What is your approach to cloud cost management?",
+            "Describe a challenge you faced in cloud computing and how you handled it.",
+            "How do you keep up with changes in cloud technology?",
+            "Where do you see cloud computing evolving in the future?",
+            "Describe a project where you implemented a cloud solution.",
+            "What are the benefits and drawbacks of multi-cloud strategies?",
+            "How do you ensure data compliance and governance in the cloud?",
+            "What is the difference between public, private, and hybrid clouds?",
+            "How do you handle disaster recovery in cloud-based systems?"
+        ]
+    },
+    "cyber-security": {
+        chatQuestions: [
+            "What is your experience with cybersecurity?",
+            "How do you approach securing a network?",
+            "What is your experience with threat detection?",
+            "Can you explain a time you dealt with a security breach?",
+            "What tools do you use for vulnerability assessments?",
+            "What are the main types of cyber-attacks?",
+            "How do firewalls protect a network?",
+            "Explain the concept of encryption and its importance in cybersecurity.",
+            "What is a VPN, and how does it ensure secure communication?",
+            "How do you handle a data breach in an organization?"
+        ],
+        videoQuestions: [
+            "Tell me about a security challenge you solved.",
+            "How do you ensure data privacy?",
+            "Describe a time when you faced a cybersecurity incident and how you responded.",
+            "What is your approach to cybersecurity risk management?",
+            "Where do you see the future of cybersecurity?",
+            "Describe a time when you dealt with a cybersecurity threat.",
+            "What is the role of penetration testing in cybersecurity?",
+            "How would you secure a company’s wireless network?",
+            "Explain the concept of a zero-trust security model.",
+            "How do you handle insider threats in an organization?"
+        ]
+    },
+    "business-analytics": {
+        chatQuestions: [
+            "What is your approach to analyzing business data?",
+            "How do you ensure data accuracy in your analyses?",
+            "Can you explain a business analytics project you've worked on?",
+            "What tools do you use for business analytics?",
+            "How do you communicate insights from data to non-technical stakeholders?",
+            "What is business analytics, and how does it help in decision-making?",
+            "Explain the difference between descriptive, predictive, and prescriptive analytics.",
+            "What tools do you use for data visualization?",
+            "How do you identify key performance indicators (KPIs) for a business?",
+            "What is a data dashboard, and how is it used in business analytics?"
+        ],
+        videoQuestions: [
+            "Tell me about a time you used data to drive a business decision.",
+            "What is your experience with predictive analytics?",
+            "Describe a challenge you faced in business analytics and how you handled it.",
+            "How do you stay updated with business analytics trends?",
+            "Where do you see business analytics evolving in the future?",
+            "Describe a project where you used business analytics to improve performance.",
+            "How do you translate business objectives into analytical solutions?",
+            "What is data mining, and how is it used in business analytics?",
+            "Explain how you would conduct a SWOT analysis using data.",
+            "How do you use business analytics to identify market trends?"
+        ]
+    }
+};
+
+function getRandomQuestions(questionsArray, numQuestions = 5) {
+    const fixedQuestion = "Tell me about yourself?";
+    const remainingQuestions = questionsArray.filter(question => question !== fixedQuestion);
+    const shuffled = remainingQuestions.sort(() => 0.5 - Math.random());
+    return [fixedQuestion, ...shuffled.slice(0, numQuestions - 1)];
+}
+
+// Function to start the video interview
+function startVideoInterview() {
+    const selectedCourse = document.getElementById('courseSelect').value;
+    if (!selectedCourse) {
+        alert("Please select a course.");
+        return;
+    }
+
+    const courseVideoQuestions = courseQuestions[selectedCourse].videoQuestions;
+    selectedVideoQuestions = getRandomQuestions(courseVideoQuestions);
+    document.querySelector('.video-call-window').style.display = 'block';
+    document.querySelector('.chat-window').style.display = 'none';
+    startVideoStream();
+}
+
+// Function to start the chat interview
+function startChatInterview() {
+    const selectedCourse = document.getElementById('courseSelect').value;
+    if (!selectedCourse) {
+        alert("Please select a course.");
+        return;
+    }
+
+    const courseChatQuestions = courseQuestions[selectedCourse].chatQuestions;
+    selectedCourseQuestions = getRandomQuestions(courseChatQuestions);
+    document.querySelector('.chat-window').style.display = 'block';
+    document.querySelector('.video-call-window').style.display = 'none';
+    askChatQuestion();
+}
+
+function askChatQuestion() {
+    if (currentChatQuestionIndex < selectedCourseQuestions.length) {
+        const question = selectedCourseQuestions[currentChatQuestionIndex];
+        const chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML += `<p><strong>AI:</strong> ${question}</p>`;
+        speakQuestion(question);
+        currentChatQuestionIndex++;
+    } else {
+        endChatInterview();
+    }
+}
+
+        function submitChatResponse() {
+            const chatInput = document.getElementById('chatInput').value.trim();
+            if (chatInput === "") {
+                alert("Please provide a response.");
+                return;
+            }
+
+            const chatBox = document.getElementById('chatBox');
+            chatResponses.push(chatInput);
+            evaluateChatResponse(chatInput, chatQuestions[currentChatQuestionIndex - 1]);
+            
+
+            document.getElementById('chatInput').value = ""; // Reset input field
+            askChatQuestion();
+        }
+        
+        function evaluateChatResponse(response, question) {
+    let feedbackMessage;
+
+    // Normalize response for case-insensitive matching
+    const normalizedResponse = response.toLowerCase().trim();
+
+    if (normalizedResponse === "i don't know" || normalizedResponse === "idk" || normalizedResponse === "i dont know" ||normalizedResponse === "") {
+        irrelevantResponses++;
+        feedbackMessage = "It's okay to not know the answer. Consider sharing your thoughts or experiences related to the question.";
+    } else if (
+        normalizedResponse.includes("i ") ||
+        normalizedResponse.includes("my") ||
+        normalizedResponse.includes("experience")
+    ) {
+        correctResponses++;
+        feedbackMessage = "Great job! Your response is relevant and well-aligned with the question.";
+    } else {
+        irrelevantResponses++;
+        feedbackMessage = "Thank you for your response. However, it seems unrelated to the question. Consider focusing more on your skills or experiences.";
+    }
+
+    const feedbackOutput = document.getElementById('feedbackOutput');
+    feedbackOutput.innerHTML += `<p><strong>Response:</strong> ${response} - <strong>Feedback:</strong> ${feedbackMessage}</p>`;
+}
+
+
+        function endChatInterview() {
+            document.querySelector('.chat-window').style.display = 'none';
+            giveFeedback('chat');
+        }
+
+        // Function to start the video stream for video interviews
+        function startVideoStream() {
+            const constraints = {
+                video: true,
+                audio: true
+            };
+
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(stream => {
+                    videoStream = stream;
+                    const videoElement = document.getElementById('videoElement');
+                    videoElement.srcObject = stream;
+                    startSpeechRecognition(); // Start speech recognition after video starts
+                })
+                .catch(error => {
+                    console.error('Error accessing media devices.', error);
+                });
+        }
+
+        function startAIQuestions() {
+            askVideoQuestion(videoQuestions);
+            
+        }
+
+        function askVideoQuestion() {
+    if (currentVideoQuestionIndex < selectedVideoQuestions.length) {
+        const question = selectedVideoQuestions[currentVideoQuestionIndex];
+        const videoOutput = document.getElementById('videoOutput');
+        videoOutput.innerHTML += `<p><strong>AI:</strong> ${question}</p>`;
+        speakQuestion(question); // Add voice output for the question
+        currentVideoQuestionIndex++;
+    } else {
+        endVideoInterview();
+    }
+}
+
+        function speakQuestion(question) {
+            const speech = new SpeechSynthesisUtterance(question);
+            speech.lang = 'en-US';
+            speech.volume = 1; // From 0 to 1
+            speech.rate = 1; // From 0.1 to 10
+            speech.pitch = 1; // From 0 to 2
+            window.speechSynthesis.speak(speech);
+        }
+
+        let permissionGranted = false;
+
+function startSpeechRecognition() {
+    if ('webkitSpeechRecognition' in window) {
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            videoResponses.push(transcript);
+            evaluateVideoResponse(transcript, videoQuestions[currentVideoQuestionIndex - 1]);
+            askVideoQuestion(videoQuestions);
+        };
+
+        recognition.onend = function() {
+            // Restart recognition to continuously listen for responses
+            if (permissionGranted) {
+                recognition.start();
+            }
+        };
+
+        if (!permissionGranted) {
+            recognition.onstart = function() {
+                permissionGranted = true;
+            };
+        }
+
+        recognition.start(); // Start recognition
+    }
+}
+
+        
+function evaluateVideoResponse(response, question) {
+    let feedbackMessage;
+    const trimmedResponse = response.trim().toLowerCase();
+
+    // Determine feedback based on the response
+    if (trimmedResponse === "") {
+        // Empty response handling
+        feedbackMessage = `
+            <p>It seems you didn’t provide an answer.</p>
+            <p><strong>Suggestion:</strong> Take a moment to gather your thoughts and try to share anything you think is relevant, even if you're unsure.</p>`;
+        incompleteResponses++;
+    } else if (
+        trimmedResponse.includes("i am") ||
+        trimmedResponse.includes("my") ||
+        trimmedResponse.includes("experience")
+    ) {
+        // Relevant response
+        correctResponses++;
+        feedbackMessage = `
+            <p>Excellent response! You’ve demonstrated a good understanding and connection to the question.</p>
+            <p><strong>Follow-up:</strong> Can you elaborate further or give a specific example to strengthen your answer?</p>`;
+    } else if (trimmedResponse === "i don't know" || trimmedResponse === "idk") {
+        // "I don't know" handling
+        feedbackMessage = `
+            <p>It’s okay not to know the answer right away.</p>
+            <p><strong>Tip:</strong> In interviews, you can express willingness to learn or share any related knowledge you have, like: “I’m not familiar with that, but I’d love to learn more about it.”</p>`;
+        irrelevantResponses++;
+    } else {
+        // Irrelevant response
+        irrelevantResponses++;
+        feedbackMessage = `
+            <p>Thank you for your response. It seems a bit off-topic or unrelated to the question.</p>
+            <p><strong>Advice:</strong> Focus on highlighting your skills or experiences relevant to the question. For example, you could say, “In my experience with [related topic], I learned...”</p>`;
+    }
+
+    // Display the question, response, and AI feedback dynamically
+    const feedbackOutput = document.getElementById('feedbackOutput');
+    feedbackOutput.innerHTML += `
+        <div class="feedback-block">
+            <p><strong>Question:</strong> ${question}</p>
+            <p><strong>Your Response:</strong> ${response}</p>
+            <p class="ai-feedback">${feedbackMessage}</p>
+        </div>`;
+}
+
+
+   
+function endVideoInterview() {
+    if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop()); // Stop video stream
+    }
+    document.querySelector('.video-call-window').style.display = 'none';
+    giveFeedback('video');
+}
+
+
+        function giveFeedback(interviewType) {
+            document.querySelector('.feedback-window').style.display = 'block';
+            const chartData = {
+                labels: ['Relevant Responses', 'Irrelevant Responses', 'Incomplete Responses'],
+                datasets: [{
+                    data: [correctResponses, irrelevantResponses, incompleteResponses],
+                    backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+                }]
+            };
+            const feedbackChart = new Chart(document.getElementById('feedbackChart'), {
+                type: 'pie',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: `Feedback for ${interviewType.charAt(0).toUpperCase() + interviewType.slice(1)} Interview`
+                        }
+                    }
+                }
+            });
+
+            const suggestions = document.getElementById('suggestionsList');
+            suggestions.innerHTML = "";
+            if (irrelevantResponses > 0) {
+                suggestions.innerHTML += "<li>Review your answers and focus on relevant details.</li>";
+            }
+            if (incompleteResponses > 0) {
+                suggestions.innerHTML += "<li>Try to answer all parts of the question in your response.</li>";
+            }
+            if (correctResponses > 0) {
+                suggestions.innerHTML += "<li>Good job! Keep up the relevant responses.</li>";
+            }
+            const feedbackContainer = document.querySelector('.feedback-window');
+    const congratulatoryImage = document.createElement('img');
+    congratulatoryImage.src = 'congratulations.png'; // Replace with your image URL
+    congratulatoryImage.alt = 'Congratulations!';
+    congratulatoryImage.style.width = '300px';
+    congratulatoryImage.style.height = '200px';
+    congratulatoryImage.style.margin = '20px auto';
+    congratulatoryImage.style.display = 'block';
+
+    const tryAgainButton = document.createElement('button');
+    tryAgainButton.textContent = 'Try Again';
+    tryAgainButton.className = 'btn btn-success mt-3';
+    tryAgainButton.onclick = resetInterview;
+
+    feedbackContainer.appendChild(congratulatoryImage);
+    feedbackContainer.appendChild(tryAgainButton);
+}
+        
+
+        function resetInterview() {
+            videoResponses = [];
+            chatResponses = [];
+            currentVideoQuestionIndex = 0;
+            currentChatQuestionIndex = 0;
+            correctResponses = 0;
+            irrelevantResponses = 0;
+            incompleteResponses = 0;
+            document.querySelector('.feedback-window').style.display = 'none';
+            document.getElementById('chatBox').innerHTML = "";
+            document.getElementById('feedbackOutput').innerHTML = "";
+            document.getElementById('suggestionsList').innerHTML = "";
+            document.getElementById('courseSelect').selectedIndex = 0; // Reset course selection
+        }
+        function startRealTimeInterview() {
+    const selectedCourse = document.getElementById('courseSelect').value;
+    if (!selectedCourse) {
+        alert("Please select a course.");
+        return;
+    }
+    window.location.href = 'realinterview.html'; // Replace with your target page URL
+}
+// Hide loading screen on page load
+window.addEventListener('load', function () {
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.opacity = '0'; // Fade out
+    setTimeout(() => {
+        loadingScreen.style.display = 'none'; // Hide after fade out
+    }, 500); // Match with CSS transition duration
+});
+
+// Show loading screen on network issues
+window.addEventListener('beforeunload', function() {
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.display = 'flex'; // Show loading screen
+});
+    </script>
+</body>
+</html>

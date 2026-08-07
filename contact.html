@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Hub 2.0</title>
+    <link rel="icon" href="icon.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="contact.css">
+    <script src="script.js"></script>
+</head>
+<body>
+
+<header>
+    <h1>AI Interview Hub 2.0</h1>
+    <nav>
+        <button onclick="window.location.href='index.html'">Home</button>
+        <button onclick="window.location.href='about.html'">About Us</button>
+        <button onclick="window.location.href='contact.html'">Contact Us</button>
+        <button onclick="window.location.href='login.html'">Get Started</button>
+    </nav>
+</header>
+
+<main>
+    <div class="contact-container">
+        <h2>Contact Us</h2>
+        <p>Thank you for your interest in <b>AI Interview Hub 2.0</b>.</p>
+        <p>Whether you're a user seeking assistance, a partner exploring collaboration, or an investor interested in supporting our mission, we welcome your inquiries.</p>
+        
+        <!-- Form with Validation -->
+        <form id="contactForm" onsubmit="return validateForm()">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email address">
+
+            <label for="query">Query</label>
+            <textarea id="query" name="query" rows="7" placeholder="Enter your query"></textarea>
+
+            <div id="error-message" style="color: red; display: none;"></div> <!-- Error message display -->
+            
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <p>Thank you for considering AI Interview Hub 2.0. We look forward to connecting with you.</p>
+</footer>
+
+<script>
+    // Validate the form
+    function validateForm() {
+        const fullName = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const query = document.getElementById('query').value.trim();
+        const errorMessage = document.getElementById('error-message');
+
+        // Clear any previous error messages
+        errorMessage.style.display = 'none';
+        errorMessage.textContent = '';
+
+        // Check if fields are filled
+        if (!fullName || !email || !query) {
+            errorMessage.textContent = 'Please fill out all fields.';
+            errorMessage.style.display = 'block';
+            return false; // Prevent form submission
+        }
+
+        // Check if email is valid
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailPattern.test(email)) {
+            errorMessage.textContent = 'Please enter a valid email address.';
+            errorMessage.style.display = 'block';
+            return false; // Prevent form submission
+        }
+
+        // If everything is valid, store data in localStorage
+        storeData(fullName, email, query);
+        return true; // Allow form submission
+    }
+
+    // Store data in localStorage
+    function storeData(fullName, email, query) {
+        const formData = {
+            fullName: fullName,
+            email: email,
+            query: query
+        };
+
+        // Store the form data as a JSON string
+        localStorage.setItem('contactFormData', JSON.stringify(formData));
+
+        alert('Your query has been submitted successfully!'); // Optional: confirmation message
+    }
+</script>
+
+</body>
+</html>

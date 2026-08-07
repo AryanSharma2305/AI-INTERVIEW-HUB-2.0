@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Hub 2.0 | Real-Time Interview</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Luxurious Styles */
+        body {
+    background: #0a0a0a;
+    font-family: 'Montserrat', sans-serif;
+    color: #f1f1f1;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Use min-height instead of fixed height */
+}
+
+.container {
+    width: 100%;
+    max-width: 950px;
+    padding: 50px;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    margin: 20px 0; /* Add margin for spacing */
+}
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ffd700;
+        }
+
+        p {
+            font-family: 'Lora', serif;
+    font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 300;
+            color: #bbb;
+        }
+
+        .card {
+            background-color: #2a2a2a;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h5 {
+            font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+
+        .card select,
+        .card button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #444;
+            color: #fff;
+        }
+
+        .card button {
+    background: linear-gradient(45deg, #ffd700, #e6b800); /* Gold gradient */
+    border: none;
+    color: #000;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+}
+
+.card button:hover {
+    background: linear-gradient(45deg, #e6b800, #ffd700); /* Reverse gradient on hover */
+    box-shadow: 0 6px 15px rgba(255, 215, 0, 0.5);
+}
+.card:hover {
+    transform: scale(1.02); /* Slightly enlarge on hover */
+    transition: transform 0.3s ease; /* Smooth transition */
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.7); /* Gold glow on focus */
+}
+
+        /* AI Avatar and User Camera Section */
+        .d-flex {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+        }
+
+        .ai-avatar,
+        .user-camera {
+            text-align: center;
+            border: 8px solid #ffd700; /* Gold border */
+    box-shadow: 0 12px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .ai-avatar img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid #444;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-camera video {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid #444;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Feedback Section */
+        .feedback {
+            margin-top: 30px;
+            font-size: 1.3rem;
+            color: #bbb;
+            text-align: center;
+        }
+
+        #feedback {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #2a2a2a; /* Dark background */
+    border: 1px solid #444; /* Subtle border */
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            max-width: 600px;
+        }
+
+        #feedback h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+            text-align: center;
+            color: #ffd700;
+        }
+
+        #feedbackForm label {
+            display: block;
+            font-weight: bold;
+            margin: 10px 0 5px;
+        }
+
+        #feedbackForm input,
+        #feedbackForm textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #333; /* Dark input fields */
+    border: 1px solid #444; /* Subtle border */
+    color: #f1f1f1; /* White text */
+            border-radius: 5px;
+        }
+
+        #feedbackForm button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #ffd700; /* Gold button */
+    color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #feedbackForm button:hover {
+            background-color: #e6b800;
+        }
+
+
+
+        .progress-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 60%;
+            height: 20px;
+            background-color: #3498db;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
+
+        .summary {
+            margin-top: 50px;
+            font-size: 1.5rem;
+            text-align: center;
+            color: #f1f1f1;
+        }
+
+        /* Additional Button Styles */
+        .card button:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(37, 117, 252, 0.7);
+        }
+
+        /* Loading Screen Styles */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8); /* Darker background for loading */
+    color: #ffd700; /* Gold text */
+            /* Dark semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            /* Ensure it is on top of other elements */
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-text {
+            font-size: 3rem;
+    animation: textAnimation 1.5s ease-in-out infinite; /* Keep the animation */
+}
+
+        .loading-subtext {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            opacity: 0.8;
+            animation: fadeIn 1s ease forwards;
+            color: #ffffff;
+            /* Changed to white for better visibility */
+        }
+
+        .loading-spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+    border-top: 8px solid #ffd700;
+            /* Spinner color */
+            border-radius: 50%;
+            width: 80px;
+            /* Increased size for better visibility */
+            height: 80px;
+            animation: spin 1s linear infinite;
+            /* Spinner animation */
+            margin: 20px auto;
+        }
+
+        /* Text Animation */
+        @keyframes textAnimation {
+
+            0%,
+            100% {
+                transform: scale(1);
+                color: #ff9900;
+                /* Color change */
+            }
+
+            50% {
+                transform: scale(1.1);
+                color: #ffffff;
+                /* Color change */
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #resultContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Center all elements horizontally */
+            margin-top: 20px;
+            /* Add spacing above the container */
+        }
+
+        #summary {
+            margin-bottom: 20px;
+            /* Add space below the summary */
+        }
+
+        #congratulationImage {
+            width: 400px;
+            /* Adjust size of the image */
+            height: auto;
+            /* Maintain aspect ratio */
+            margin-top: 20px;
+            /* Space above the image */
+        }
+
+        #tryAgainButton {
+            margin-top: 20px;
+            /* Space above the button */
+            padding: 15px 30px;
+            /* Increase button size */
+            background-color: #4CAF50;
+            /* Button color */
+            color: white;
+            /* Button text color */
+            font-size: 18px;
+            /* Larger text */
+            border: none;
+            /* Remove border */
+            border-radius: 8px;
+            /* Rounded edges */
+            cursor: pointer;
+            /* Pointer on hover */
+        }
+
+        #tryAgainButton:hover {
+            background-color: #45a049;
+            /* Button hover effect */
+        }
+
+        /* Pie Chart Styles */
+.pie-chart {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #2575fc 0% 33%,
+        #ff9900 33% 66%,
+        #4CAF50 66% 100%
+    );
+    margin: 20px auto;
+    position: relative;
+}
+
+.pie-chart::before {
+    content: "";
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    background: #2c2f43;
+    border-radius: 50%;
+    top: 10%;
+    left: 10%;
+}
+
+.pie-chart-labels {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.pie-chart-label {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: #bbb;
+}
+
+.pie-chart-label span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+    border-radius: 50%;
+}
+
+.pie-chart-label.general span {
+    background: #2575fc;
+}
+
+.pie-chart-label.course span {
+    background: #ff9900;
+}
+
+.pie-chart-label.personal span {
+    background: #4CAF50;
+}
+    </style>
+</head>
+
+<body>
+
+    <!-- Loading Animation -->
+    <div id="loading" class="loading-screen">
+        <div class="loading-content">
+            <h1 class="loading-text">Loading AI New Experience...</h1>
+            <div class="loading-spinner"></div>
+            <p class="loading-subtext">Please wait while we prepare your experience...</p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="text-center">
+            <h1>AI Interview Hub 2.0</h1>
+            <p>Experience a real-time AI-driven interview designed to help you ace your career journey.</p>
+        </div>
+
+        <div class="card">
+            <h5>Select Course</h5>
+            <select id="courseSelect" class="form-control mb-3">
+                <option value="" selected disabled>Select a course</option>
+                <option value="data-science">Data Science</option>
+                <option value="software-engineering">Software Engineering</option>
+                <option value="cloud-computing">Cloud Computing</option>
+            </select>
+            <div class="text-center">
+                <button onclick="startRealTimeInterview()">Start Real-Time Interview</button>
+            </div>
+        </div>
+
+        <div class="d-flex">
+            <div class="ai-avatar">
+                <img src="aiavtar.png" alt="AI Avatar">
+            </div>
+            <div class="user-camera">
+                <video id="userVideo" autoplay></video>
+            </div>
+        </div>
+
+        <div id="aiQuestion"></div>
+        <div class="feedback"></div>
+
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <div id="resultContainer" style="text-align: center; margin-top: 20px;">
+            <div id="summary"></div>
+            <div id="graphContainer" class="graph-container" style="display: none;">
+                <h3>Performance Graph</h3>
+                <div id="graphBars"></div>
+            </div>
+            <div id="congratulationSection" style="display: none;">
+                <img src="congratulations.png" alt="Congratulations" id="congratulationImage">
+                <div>
+                    <button id="tryAgainButton" onclick="tryAgain()">Try Again</button>
+                </div>
+            </div>
+        </div>
+        <div id="recordedInterview" style="display: none; text-align: center; margin-top: 20px;">
+            <h5>Recorded Interview</h5>
+            <video id="recordedVideo" controls style="width: 100%; max-width: 600px;"></video>
+        </div>
+        <div id="interviewEndSection" style="display: none;">
+            <h2>Thank you for completing the interview!</h2>
+            <p>We’d love to hear your thoughts about your experience.</p>
+            <button id="giveFeedbackButton">Give Feedback</button>
+        </div>
+
+
+        <section id="feedback" style="display: none;">
+            <h2>We Value Your Feedback</h2>
+            <p>Please share your experience with us!</p>
+            <form id="feedbackForm">
+                <label for="userName">Name:</label>
+                <input type="text" id="userName" name="userName" placeholder="Enter your name" required>
+
+                <label for="userFeedback">Feedback:</label>
+                <textarea id="userFeedback" name="userFeedback" rows="4" placeholder="Write your feedback here..."
+                    required></textarea>
+
+                <button type="submit">Submit Feedback</button>
+            </form>
+
+            <hr>
+            <h3>What Others Are Saying</h3>
+            <div id="feedbackList">
+                <!-- Submitted feedback will be displayed here -->
+            </div>
+        </section>
+
+
+
+        <script>
+
+            const courseQuestions = {
+                "data-science": [
+                    "What is the difference between supervised and unsupervised learning?",
+                    "Describe a project where you applied machine learning.",
+                    "Can you describe a Data Science project you've worked on?",
+                    "How do you handle large datasets?",
+                    "Explain the concept of data normalization."
+                ],
+                "software-engineering": [
+                    "What is the importance of version control?",
+                    "Describe a software development lifecycle model you prefer.",
+                    "What is polymorphism in object-oriented programming?"
+                ],
+                "cloud-computing": [
+                    "What are the benefits of cloud computing?",
+                    "Describe the difference between IaaS and SaaS.",
+                    "What challenges have you faced during cloud migrations?"
+                ]
+            };
+            const generalQuestions = [
+                "Tell me about yourself",
+                "Where do you see yourself after 5 years?",
+                "Why should we hire you?",
+                "What are your strengths?",
+                "What are your weaknesses?",
+                "Can you describe a time when you overcame a difficult challenge?",
+                "How do you prevent a situation from getting too stressful to manage?",
+            ];
+
+            const personalQuestions = [
+                "Tell me about your family",
+                "Describe yourself in three to five words",
+                "What do you like to do in your free time?",
+                "What are your hobbies?",
+                "What do you like to do on the weekends?",
+                "What are your salary expectations?"
+            ];
+
+            let selectedCourse = "";
+            let questionsQueue = [];
+            let currentQuestionIndex = 0;
+            let relevantResponses = 0;
+            let irrelevantResponses = 0;
+            let mediaRecorder;
+            let recordedChunks = [];
+            let generalResponses = { relevant: 0, irrelevant: 0 };
+            let courseResponses = { relevant: 0, irrelevant: 0 };
+            let personalResponses = { relevant: 0, irrelevant: 0 };
+
+
+            // Access User Camera
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                .then((stream) => {
+                    const videoElement = document.getElementById("userVideo");
+                    videoElement.srcObject = stream;
+
+                    // Initialize MediaRecorder
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    // Event to handle data available
+                    mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            recordedChunks.push(event.data);
+                        }
+                    };
+
+                    // Event to handle stop recording
+                    mediaRecorder.onstop = () => {
+                        const recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
+                        const recordedVideoElement = document.getElementById("recordedVideo");
+                        recordedVideoElement.src = URL.createObjectURL(recordedBlob);
+                        document.getElementById("recordedInterview").style.display = "block";
+                    };
+                })
+
+                .catch((error) => {
+                    console.error("Camera and microphone access denied:", error);
+                    alert("Please allow camera and microphone access to proceed.");
+                });
+
+            // Initialize Speech Recognition
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+
+            // Start Real-Time Interview
+            function startRealTimeInterview() {
+                selectedCourse = document.getElementById("courseSelect").value;
+                if (!selectedCourse) {
+                    alert("Please select a course first!");
+                    return;
+                }
+                questionsQueue = [
+        "Tell me about yourself", // First question
+        ...shuffleArray(generalQuestions.filter(q => q !== "Tell me about yourself")).slice(0, 2), // 2 more general questions
+        ...shuffleArray(courseQuestions[selectedCourse]).slice(0, 4), // 4 course-specific questions
+        ...shuffleArray(personalQuestions).slice(0, 3) // 3 personal questions
+    ];
+                currentQuestionIndex = 0;
+                generalResponses = { relevant: 0, irrelevant: 0 };
+                courseResponses = { relevant: 0, irrelevant: 0 };
+                personalResponses = { relevant: 0, irrelevant: 0 };
+                mediaRecorder.start();
+                askQuestion();
+            }
+
+            // Ask a Question
+            function askQuestion() {
+                if (currentQuestionIndex >= questionsQueue.length) {
+                    endInterview();
+                    return;
+                }
+
+                const question = questionsQueue[currentQuestionIndex];
+                document.getElementById("aiQuestion").innerText = question;
+                speakText(question);
+
+                // Listen for user response
+                recognition.start();
+            }
+
+            // Handle User Response
+            recognition.onresult = (event) => {
+                const userResponse = event.results[0][0].transcript.toLowerCase();
+                console.log("User Response:", userResponse);
+
+                // Feedback for user response
+                const feedbackElement = document.querySelector(".feedback");
+                let feedbackMessage = "";
+                let currentSection = "";
+
+                if (currentQuestionIndex < generalQuestions.length) {
+    currentSection = "general";
+} else if (currentQuestionIndex < generalQuestions.length + courseQuestions.length) {
+    currentSection = "course";
+} else {
+    currentSection = "personal";
+}
+if (currentQuestionIndex === 0) {
+    currentSection = "general";
+} else if (currentQuestionIndex <= 2) {
+    currentSection = "general";
+} else if (currentQuestionIndex <= 6) {
+    currentSection = "course";
+} else {
+    currentSection = "personal";
+}
+
+                if (userResponse.trim() === "" || userResponse.toLowerCase().includes("i don't know")) {
+    feedbackMessage = "Irrelevant response. It's okay not to know, but try to give a confident and thoughtful answer.";
+    if (currentSection === "general") generalResponses.irrelevant++;
+    else if (currentSection === "course") courseResponses.irrelevant++;
+    else personalResponses.irrelevant++;
+} else if (userResponse.length < 10) {
+    feedbackMessage = "Your response is too short. Try to provide more details or examples to support your answer.";
+    if (currentSection === "general") generalResponses.irrelevant++;
+    else if (currentSection === "course") courseResponses.irrelevant++;
+    else personalResponses.irrelevant++;
+} else if (userResponse.includes("maybe") || userResponse.includes("not sure")) {
+    feedbackMessage = "Your answer shows hesitation. Try to answer with more certainty and confidence.";
+    if (currentSection === "general") generalResponses.irrelevant++;
+    else if (currentSection === "course") courseResponses.irrelevant++;
+    else personalResponses.irrelevant++;
+} else {
+    feedbackMessage = "Good answer! Keep it up! You addressed the question effectively.";
+    if (currentSection === "general") generalResponses.relevant++;
+    else if (currentSection === "course") courseResponses.relevant++;
+    else personalResponses.relevant++;
+}
+
+
+
+
+                feedbackElement.innerText = feedbackMessage;
+                speakText(feedbackMessage);
+
+                // Update progress and move to the next question
+                currentQuestionIndex++;
+                updateProgress();
+                if (currentQuestionIndex >= questionsQueue.length) {
+                    endInterview(); // End the interview after the last question
+                } else {
+                    setTimeout(askQuestion, 3000); // Ask the next question after 3 seconds
+                }
+            };
+
+
+            recognition.onerror = (event) => {
+                alert("Speech recognition error. Please try again.");
+            };
+
+            // End Interview
+            function endInterview() {
+                {
+                    document.getElementById("interviewEndSection").style.display = "block"; // Show the interview end message
+                }
+
+                // Handle "Give Feedback" button click
+                document.getElementById("giveFeedbackButton").addEventListener("click", function (event) {
+                    event.preventDefault();
+                    event.stopPropagation()
+                    document.querySelector("form").addEventListener("submit", function (event) {
+    event.preventDefault();
+});
+                    document.getElementById("interviewEndSection").style.display = "none"; // Hide interview end message
+                    document.getElementById("feedback").style.display = "block"; // Show feedback form
+                    document.getElementById("resultContainer").style.display = "block";
+                    document.getElementById("graphContainer").style.display = "block";
+// Ensure the body and container can expand
+document.body.style.height = "auto"; // Allow body to expand
+document.querySelector(".container").style.height = "auto"; // Allow container to expand
+
+// Scroll to the top of the page
+window.scrollTo({ top: window.scrollY, behavior: "auto" }); // Lock scroll position
+
+
+                });
+
+                // Feedback Form Logic
+                const feedbackForm = document.getElementById("feedbackForm");
+                const feedbackList = document.getElementById("feedbackList");
+
+                // Load feedback from local storage on page load
+                document.addEventListener("DOMContentLoaded", loadFeedback);
+
+                // Handle feedback form submission
+                feedbackForm.addEventListener("submit", function (event) {
+                    event.preventDefault(); // Prevent form refresh
+
+                    const userName = document.getElementById("userName").value;
+                    const userFeedback = document.getElementById("userFeedback").value;
+
+                    const feedback = { name: userName, feedback: userFeedback };
+
+                    // Save feedback
+                    saveFeedback(feedback);
+
+                    // Display feedback
+                    addFeedbackToList(feedback);
+
+                    // Reset form
+                    feedbackForm.reset();
+                });
+
+                // Save feedback to local storage
+                function saveFeedback(feedback) {
+                    const feedbackArray = JSON.parse(localStorage.getItem("feedbackList")) || [];
+                    feedbackArray.push(feedback);
+                    localStorage.setItem("feedbackList", JSON.stringify(feedbackArray));
+                }
+
+                // Load feedback from local storage
+                function loadFeedback() {
+                    const feedbackArray = JSON.parse(localStorage.getItem("feedbackList")) || [];
+                    feedbackArray.forEach(addFeedbackToList);
+                }
+
+                // Add feedback to the list dynamically
+                function addFeedbackToList(feedback) {
+                    const feedbackItem = document.createElement("div");
+                    feedbackItem.classList.add("feedback-item");
+                    feedbackItem.innerHTML = `
+    <h4>${feedback.name}</h4>
+    <p>${feedback.feedback}</p>
+  `;
+                    feedbackList.appendChild(feedbackItem);
+                }
+                mediaRecorder.stop();
+                const summaryElement = document.getElementById("summary");
+                const congratulationSection = document.getElementById("congratulationSection");
+                const graphContainer = document.getElementById("graphContainer");
+                const graphBars = document.getElementById("graphBars");
+
+                const totalQuestions = questionsQueue.length;
+                const performanceRating = relevantResponses / totalQuestions >= 0.8 ? "Excellent" :
+                    relevantResponses / totalQuestions >= 0.5 ? "Good" : "Average";
+
+                summaryElement.innerHTML = `
+                <p>Interview Completed!</p>
+                <p><b>Total Questions:</b> ${totalQuestions}</p>
+                <p><b>General Relevant Responses:</b> ${generalResponses.relevant}</p>
+                <p><b>Course Relevant Responses:</b> ${courseResponses.relevant}</p>
+                <p><b>Personal Relevant Responses:</b> ${personalResponses.relevant}</p>
+            `;
+
+                // Create Graph
+                graphBars.innerHTML = `
+        <div class="pie-chart"></div>
+        <div class="pie-chart-labels">
+            <div class="pie-chart-label general"><span></span>General</div>
+            <div class="pie-chart-label course"><span></span>Course</div>
+            <div class="pie-chart-label personal"><span></span>Personal</div>
+        </div>
+    `;
+    const pieChart = document.querySelector(".pie-chart");
+    const generalPercentage = (generalResponses.relevant / totalQuestions) * 100;
+    const coursePercentage = (courseResponses.relevant / totalQuestions) * 100;
+    const personalPercentage = (personalResponses.relevant / totalQuestions) * 100;
+
+    pieChart.style.background = `conic-gradient(
+        #2575fc 0% ${generalPercentage}%,
+        #ff9900 ${generalPercentage}% ${generalPercentage + coursePercentage}%,
+        #4CAF50 ${generalPercentage + coursePercentage}% 100%
+    )`;
+                // Make both sections visible
+                summaryElement.style.display = "block";
+                graphContainer.style.display = "block";
+                congratulationSection.style.display = "block";
+            }
+
+
+
+            function tryAgain() {
+    // Reset the interview state
+    document.getElementById("summary").innerHTML = "";
+    document.getElementById("summary").style.display = "none"; // Hide summary
+
+    const congratulationSection = document.getElementById("congratulationSection");
+    congratulationSection.style.display = "none"; // Hide the congratulation section
+
+    document.getElementById("courseSelect").selectedIndex = 0; // Reset course selection
+
+    // Refresh the HTML
+    location.reload();
+}
+
+
+            // Update Progress Bar
+            function updateProgress() {
+                const progress = (currentQuestionIndex / questionsQueue.length) * 100;
+                document.getElementById("progressBar").style.width = `${progress}%`;
+            }
+
+            // Text to Speech
+            function speakText(text) {
+                const speech = new SpeechSynthesisUtterance(text);
+                window.speechSynthesis.speak(speech);
+            }
+
+            // Shuffle Array (for random question order)
+            function shuffleArray(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+            window.onload = () => {
+                document.getElementById('loading').style.display = 'none'; // Hide loader
+                document.querySelector('.container').style.visibility = 'visible'; // Show the main content
+            };
+            // Hide loading screen on page load
+            window.addEventListener('load', function () {
+                const loadingScreen = document.getElementById('loading');
+                loadingScreen.style.opacity = '0'; // Fade out
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none'; // Hide after fade out
+                }, 500); // Match with CSS transition duration
+            });
+
+            // Show loading screen on network issues
+            window.addEventListener('beforeunload', function () {
+                const loadingScreen = document.getElementById('loading');
+                loadingScreen.style.display = 'flex'; // Show loading screen
+            });
+
+            // Show loading screen on specific actions (e.g., form submission)
+            const submitButton = document.getElementById('submit-btn'); // Change this to your actual button ID
+            if (submitButton) {
+                submitButton.addEventListener('click', function () {
+                    const loadingScreen = document.getElementById('loading');
+                    loadingScreen.style.display = 'flex'; // Show loading screen
+                });
+            }
+
+        </script>
+</body>
+
+</html>

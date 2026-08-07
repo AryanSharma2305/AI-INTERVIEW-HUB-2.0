@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Hub 2.0 | Aptitude & Technical Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #141E30, #243B55);
+            color: #ffffff;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            perspective: 1000px; /* Add perspective for 3D effect */
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease-in-out;
+            transform: rotateY(0deg); /* Initial rotation for 3D effect */
+            animation: float 3s ease-in-out infinite; /* Floating animation */
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .hidden { display: none; }
+        button {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: 0.3s;
+            box-shadow: 0px 4px 15px rgba(255, 75, 43, 0.5);
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+        button:hover { 
+            transform: scale(1.05); 
+            box-shadow: 0px 6px 20px rgba(255, 75, 43, 0.7);
+        }
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transition: all 0.5s ease;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 0;
+        }
+        button:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        #options button {
+            width: 100%;
+            padding: 15px;
+            margin: 8px 0;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        #options button:hover { 
+            background: rgba(255, 255, 255, 0.4); 
+            transform: scale(1.02);
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-top: 15px;
+            border-radius: 8px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            font-size: 16px;
+            resize: none;
+        }
+        #timer {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        #question-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+        }
+        #result-container, #solution-container {
+            margin-top: 20px;
+        }
+        #solution-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #solution-list li {
+            margin: 10px 0;
+            font-size: 1.2rem;
+            color: #f8f8f8;
+        }
+        .loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(52, 73, 94, 0.9); /* Dark semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure it is on top of other elements */
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.loading-text {
+    font-size: 2.5rem;
+    animation: textAnimation 1.5s ease-in-out infinite; /* Animated text */
+}
+
+.loading-subtext {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    opacity: 0.8;
+    animation: fadeIn 1s ease forwards;
+    color: #ffffff; /* Changed to white for better visibility */
+}
+
+.loading-spinner {
+    border: 8px solid rgba(255, 255, 255, 0.3);
+    border-top: 8px solid #ff9900; /* Spinner color */
+    border-radius: 50%;
+    width: 80px; /* Increased size for better visibility */
+    height: 80px;
+    animation: spin 1s linear infinite; /* Spinner animation */
+    margin: 20px auto;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Aptitude & Technical Test</h1>
+        <div id="timer">Time Left: <span id="time">05:00</span></div>
+        <div class="section-selector">
+            <button onclick="startTest('non-tech')">Non-Tech</button>
+            <button onclick="startTest('tech')">Technical</button>
+            <button onclick="window.location.href='AIinterview.html'">Interview</button>
+        </div>
+        <div id="quiz-container" class="hidden">
+            <h2 id="question-title"></h2>
+            <div id="options"></div>
+            <textarea id="code-answer" class="hidden" placeholder="Write your code here..."></textarea>
+            <button onclick="submitAnswer()">Submit</button>
+        </div>
+        <div id="result-container" class="hidden">
+            <h2>Test Results</h2>
+            <p>Total Questions: <span id="total-questions"></span></p>
+            <p>Correct Answers: <span id="correct-answers"></span></p>
+            <p>Accuracy: <span id="accuracy"></span>%</p>
+            <p>Average Time per Question: <span id="avg-time"></span> seconds</p>
+            <button onclick="showSolutions()">View Solutions</button>
+            <button onclick="restartTest()">Try Again</button>
+            <button onclick="window.location.href='AIinterview.html'">Interview</button>
+        </div>
+        <div id="solution-container" class="hidden">
+            <h2>Solutions</h2>
+            <ul id="solution-list"></ul>
+            <button onclick="restartTest()">Back to Home</button>
+            <button onclick="window.location.href='AIinterview.html'">Interview</button>
+        </div>
+        <!-- Loading Animation -->
+<div id="loading" class="loading-screen">
+    <div class="loading-content">
+        <h1 class="loading-text">Loading AI Resume Helper...</h1>
+        <div class="loading-spinner"></div>
+        <p class="loading-subtext">Please wait while we prepare your experience...</p>
+    </div>
+</div>
+    </div>
+    <script>
+        let questions, currentQuestions = [], currentIndex = 0, correctAnswers = 0, startTime, times = [];
+        let timer; // Timer variable
+        let timeLeft = 300; // 5 minutes in seconds
+        questions = {
+            'non-tech': [
+                { question: "What is the square root of 144?", options: ["10", "12", "14", "16"], answer: "12" },
+                { question: "Which of the following is a prime number?", options: ["15", "23", "33", "49"], answer: "23" },
+                { question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Rome"], answer: "Paris" },
+                { question: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Jupiter", "Venus"], answer: "Mars" },
+                { question: "What is the largest ocean on Earth?", options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"], answer: "Pacific Ocean" },
+                { question: "Which gas do plants absorb from the atmosphere?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], answer: "Carbon Dioxide" },
+                { question: "What is the chemical symbol for gold?", options: ["Au", "Ag", "Pb", "Fe"], answer: "Au" },
+                { question: "Who wrote 'Romeo and Juliet'?", options: ["Charles Dickens", "William Shakespeare", "Mark Twain", "Jane Austen"], answer: "William Shakespeare" },
+                { question: "If you have a bowl with six apples and you take away four, how many do you have?", options: ["2", "4", "6", "None"], answer: "4" },
+        { question: "A farmer has 17 sheep, and all but 9 die. How many are left?", options: ["8", "9", "17", "None"], answer: "9" },
+        { question: "What is heavier: a ton of feathers or a ton of bricks?", options: ["Feathers", "Bricks", "They weigh the same", "None"], answer: "They weigh the same" },
+        { question: "If it takes 5 machines 5 minutes to make 5 widgets, how long will it take 100 machines to make 100 widgets?", options: ["5 minutes", "10 minutes", "100 minutes", "1 minute"], answer: "5 minutes" },
+        { question: "How many times can you subtract 10 from 100?", options: ["10", "1", "9", "None"], answer: "1" },
+        { question: "What is the next number in the sequence: 1, 1, 2, 3, 5, 8, ?", options: ["10", "11", "12", "13"], answer: "13" },
+        { question: "If you have three apples and you take away two, how many do you have?", options: ["1", "2", "3", "None"], answer: "2" },
+        { question: "What has keys but can't open locks?", options: ["A map", "A piano", "A computer", "A car"], answer: "A piano" },
+        { question: "If you have a 3-gallon jug and a 5-gallon jug, how can you measure out exactly 4 gallons of water?", options: ["Fill the 5-gallon jug", "Fill the 3-gallon jug", "Pour from one jug to another", "All of the above"], answer: "All of the above" },
+        { question: "A plane crashes on the border of the United States and Canada. Where do they bury the survivors?", options: ["In the US", "In Canada", "Nowhere", "Both"], answer: "Nowhere" },
+        { question: "What can travel around the world while staying in a corner?", options: ["A stamp", "A shadow", "A cloud", "A plane"], answer: "A stamp" },
+        { question: "If you drop a yellow hat in the Red Sea, what does it become?", options: ["Wet", "Sunk", "Yellow", "None"], answer: "Wet" },
+        { question: "How many months have 28 days?", options: ["1", "2", "12", "None"], answer: "12" },
+        { question: "What begins with T, ends with T, and has T in it?", options: ["Teapot", "Tent", "Test", "Tart"], answer: "Teapot" },
+        { question: "If two's company and three's a crowd, what are four and five?", options: ["Nine", "A party", "A gathering", "None"], answer: "Nine" },
+        { question: "What can you catch but not throw?", options: ["A cold", "A ball", "A fish", "A train"], answer: "A cold" },
+        { question: "What gets wetter as it dries?", options: ["A towel", "A sponge", "A river", "A cloud"], answer: "A towel" },
+        { question: "What can you eat without getting sick?", options: ["Chocolate", "Candy", "Ice cream", "Fire"], answer: "Ice cream" },
+        
+    ],
+    
+            'tech': [
+                { question: "What is the time complexity of binary search?", options: ["O(n)", "O(log n)", "O(n log n)", "O(1)"], answer: "O(log n)" },
+                { question: "Which of the following is a programming language?", options: ["HTML", "CSS", "JavaScript", "XML"], answer: "JavaScript" },
+                { question: "What does CPU stand for?", options: ["Central Processing Unit", "Central Program Unit", "Computer Personal Unit", "Central Peripheral Unit"], answer: "Central Processing Unit" },
+                { question: "Which of the following is not a database?", options: ["MySQL", "MongoDB", "PostgreSQL", "HTML"], answer: "HTML" },
+                { question: "What is the main function of an operating system?", options: ["Manage hardware resources", "Run applications", "Provide security", "All of the above"], answer: "All of the above" },
+                { question: "What is the time complexity of a linear search algorithm?", options: ["O(1)", "O(n)", "O(log n)", "O(n²)"], answer: "O(n)" },
+        { question: "Which of the following is a front-end framework?", options: ["Django", "Flask", "React", "Spring"], answer: "React" },
+        { question: "What does SQL stand for?", options: ["Structured Query Language", "Simple Query Language", "Sequential Query Language", "Standard Query Language"], answer: "Structured Query Language" },
+        { question: "Which of the following is not a programming language?", options: ["Python", "Java", "HTML", "C++"], answer: "HTML" },
+        { question: "What is the purpose of the 'this' keyword in JavaScript?", options: ["To refer to the global object", "To refer to the current object", "To refer to the parent object", "None of the above"], answer: "To refer to the current object" },
+        { question: "Which of the following is a NoSQL database?", options: ["MySQL", "PostgreSQL", "MongoDB", "SQLite"], answer: "MongoDB" },
+        { question: "What is the main function of a router in a web application?", options: ["To manage database connections", "To handle user authentication", "To direct incoming requests to the appropriate handler", "To serve static files"], answer: "To direct incoming requests to the appropriate handler" },
+        { question: "What is the primary purpose of a firewall?", options: ["To block viruses", "To prevent unauthorized access", "To speed up the network", "To manage traffic"], answer: "To prevent unauthorized access" },
+        { question: "Which of the following is a valid CSS selector?", options: [".class", "#id", "element", "All of the above"], answer: "All of the above" },
+        { question: "What does API stand for?", options: ["Application Programming Interface", "Application Program Interface", "Application Protocol Interface", "None of the above"], answer: "Application Programming Interface" },
+        { question: "Which of the following is a version control system?", options: ["Git", "Node.js", "React", "Java"], answer: "Git" },
+        { question: "What is the main function of a database?", options: ["Store data", "Process data", "Analyze data", "All of the above"], answer: "Store data" },
+        { question: "Which of the following is a front-end technology?", options: ["Node.js", "Express", "React", "Django"], answer: "React" },
+        { question: "What is the purpose of the 'return' statement in a function?", options: ["To exit the function", "To return a value", "To create a loop", "Both A and B"], answer: "Both A and B" },
+        { question: "Which of the following is a JavaScript framework?", options: ["Django", "Flask", "Angular", "Ruby on Rails"], answer: "Angular" },
+        { question: "What does the acronym HTTP stand for?", options: ["HyperText Transfer Protocol", "HyperText Transmission Protocol", "HyperText Transport Protocol", "None of the above"], answer: "HyperText Transfer Protocol" },
+        { question: "Which of the following is used to style web pages?", options: ["HTML", "CSS", "JavaScript", "All of the above"], answer: "CSS" },
+        { question: "Which of the following is a web framework?", options: ["Django", "Flask", "React", "Ruby on Rails"], answer: "Django" },
+        { question: "What is the purpose of a loop in a programming language?", options: ["To iterate over a collection of data", "To repeat a block of code", "To compare two values",], answer: "To iterate over a collection of data" },
+    ]
+        };
+
+        function startTest(section) {
+            document.querySelector('.section-selector').style.display = 'none';
+            document.getElementById('quiz-container').classList.remove('hidden');
+
+            // Get random questions
+            if (section === 'non-tech') {
+                currentQuestions = getRandomQuestions(questions['non-tech'], 10); // Get 10 random non-tech questions
+            } else {
+                currentQuestions = getRandomQuestions(questions['tech'], 10); // Get 10 random tech questions
+            }
+
+            currentIndex = 0;
+            correctAnswers = 0;
+            times = [];
+            loadQuestion();
+            startTimer(); // Start the timer when the test starts
+        }
+
+        // Function to shuffle an array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Function to get random questions
+        function getRandomQuestions(questions, numQuestions) {
+            // Shuffle the questions
+            const shuffledQuestions = shuffleArray(questions);
+            // Return the first 'numQuestions' questions
+            return shuffledQuestions.slice(0, numQuestions);
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    showResults(); // Show results when time is up
+                } else {
+                    timeLeft--;
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    document.getElementById('time').innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            if (currentIndex < currentQuestions.length) {
+                startTime = new Date();
+                let q = currentQuestions[currentIndex];
+                document.getElementById('question-title').innerText = q.question;
+                let optionsDiv = document.getElementById('options');
+                let codeArea = document.getElementById('code-answer');
+                optionsDiv.innerHTML = '';
+                codeArea.classList.add('hidden');
+                codeArea.value = ''; // Clear the textarea for the new question
+                if (q.isCoding) { 
+                    codeArea.classList.remove('hidden'); 
+                } else {
+                    q.options.forEach(opt => {
+                        let btn = document.createElement('button');
+                        btn.innerText = opt;
+                        btn.onclick = () => selectAnswer(opt);
+                        optionsDiv.appendChild(btn);
+                    });
+                }
+            } else { 
+                showResults(); 
+            }
+        }
+        
+        function submitAnswer() {
+            let q = currentQuestions[currentIndex];
+            if (q.isCoding) {
+                let userAnswer = document.getElementById('code-answer').value.trim();
+                if (userAnswer.length > 0) {
+                    const normalizedUserAnswer = userAnswer.replace(/\r?\n/g, '\n').trim();
+                    const normalizedExpectedOutput = q.expectedOutput.replace(/\r?\n/g, '\n').trim();
+                    if (normalizedUserAnswer === normalizedExpectedOutput) {
+                        correctAnswers++; 
+                    }
+                }
+            }
+            currentIndex++;
+            loadQuestion();
+        }
+            
+        function selectAnswer(selected) {
+            let q = currentQuestions[currentIndex];
+            if (!q.isCoding && selected === q.answer) {
+                correctAnswers++; 
+            }
+            currentIndex++;
+            loadQuestion();
+        }
+
+        function showResults() {
+            clearInterval(timer); 
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('result-container').classList.remove('hidden');
+            document.getElementById('total-questions').innerText = currentQuestions.length;
+            document.getElementById('correct-answers').innerText = correctAnswers;
+            document.getElementById('accuracy').innerText = ((correctAnswers / currentQuestions.length) * 100).toFixed(2);
+            document.getElementById('avg-time').innerText = (times.reduce((a, b) => a + b, 0) / times.length).toFixed(2);
+        }
+
+        function showSolutions() {
+            document.getElementById('result-container').classList.add('hidden');
+            document.getElementById('solution-container').classList.remove('hidden');
+            let solutionList = document.getElementById('solution-list');
+            solutionList.innerHTML = '';
+            currentQuestions.forEach(q => {
+                let li = document.createElement('li');
+                if (q.isCoding) {
+                    li.innerText = `${q.question} - Solution: ${q.solution}`;
+                } else {
+                    li.innerText = `${q.question} - Correct Answer: ${q.answer}`;
+                }
+                solutionList.appendChild(li);
+            });
+        }
+
+        function restartTest() {
+            clearInterval(timer); 
+            document.getElementById('result-container').classList.add('hidden');
+            document.getElementById('solution-container').classList.add('hidden');
+            document.querySelector('.section-selector').style.display = 'block';
+            timeLeft = 300; 
+            document.getElementById('time').innerText = "05:00"; 
+        }
+        window.addEventListener('load', function () {
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.opacity = '0'; // Fade out
+    setTimeout(() => {
+        loadingScreen.style.display = 'none'; // Hide after fade out
+    }, 500); // Match with CSS transition duration
+});
+
+// Show loading screen on network issues
+window.addEventListener('beforeunload', function() {
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.display = 'flex'; // Show loading screen
+});
+
+    </script>
+</body>
+</html>

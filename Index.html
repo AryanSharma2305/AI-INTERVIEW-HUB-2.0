@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Hub 2.0</title>
+    <link rel="icon" href="icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="question.css">
+    
+    
+    <style>
+        /* General styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #ecf0f1; /* Light background for a premium feel */
+            color: #2c3e50;
+        }
+
+        header {
+            position: sticky; /* Make the header sticky */
+            top: 0; /* Stick to the top */
+            z-index: 1000; /* Ensure it stays on top of other elements */
+            transition: background-color 0.3s ease; /* Smooth transition for background color */
+            background-color: #34495e;
+            color: white;
+            padding: 20px 50px;,
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        header.transparent {
+            background-color: rgba(52, 73, 94, 0.6); /* Semi-transparent background */
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+        }
+
+        nav button {
+            background: transparent;
+            color: #ecf0f1;
+            border: 2px solid #f39c12;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        nav button:hover {
+            background: #f39c12;
+            color: #2c3e50;
+        }
+
+        main {
+            padding: 50px; /* Enhanced padding for a spacious feel */
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align items to start for vertical stacking */
+            background: #ffffff; /* White background for content area */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Soft shadow for main area */
+        }
+
+        .content {
+            flex: 1; /* Take up remaining space */
+            padding-right: 30px; /* Space between content and video */
+        }
+
+        .robot-video-container {
+            flex: 0 0 50%; /* Fixed width for video container */
+            padding: 20px; /* Padding around video */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(241, 240, 240, 0.2); /* Soft shadow */
+            overflow: hidden; /* Prevent overflow of video */
+            background: rgba(247, 246, 246, 0.7); /* Semi-transparent dark background for video section */
+        }
+
+        .robot-video video {
+            width: 100%; /* Full width for the video */
+            border-radius: 10px; /* Rounded corners for video */
+        }
+
+        .youtube-video {
+            margin: 50px 0; /* Ample space above and below */
+            text-align: center; /* Center the video title and video */
+        }
+
+        .youtube-video h2 {
+            font-size: 2.5rem; /* Larger title for emphasis */
+            margin-bottom: 20px; /* Space below title */
+        }
+
+        .faq-container {
+            background: #f9f9f9; /* Light grey for FAQ */
+            padding: 30px; /* Padding for better spacing */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Soft shadow */
+            margin-bottom: 50px; /* Space below FAQ section */
+            text-align: left; /* Align text to the left */
+        }
+
+        .faq-item {
+            margin: 15px 0; /* Space between FAQ items */
+        }
+
+        .faq-button {
+            background: linear-gradient(45deg, #e67e22, #d35400); /* Rich gradient */
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%; /* Full width for button */
+            text-align: left; /* Align text to the left */
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow for buttons */
+        }
+
+        .faq-button:hover {
+            background-color: #c95c1b; /* Darker gradient on hover */
+        }
+
+        .faq-content {
+            display: none; /* Hide FAQ content by default */
+            padding: 15px 20px;
+            background: #f0f0f0; /* Light background for content */
+            border-radius: 5px;
+            margin-top: 10px; /* Space above content */
+        }
+
+        /* Scroll animations */
+        h2, h3, p {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+       /* Loading Screen Styles */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(52, 73, 94, 0.9); /* Dark semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure it is on top of other elements */
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.loading-text {
+    font-size: 2.5rem;
+    animation: textAnimation 1.5s ease-in-out infinite; /* Animated text */
+}
+
+.loading-subtext {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    opacity: 0.8;
+    animation: fadeIn 1s ease forwards;
+}
+
+.loading-spinner {
+    border: 8px solid rgba(255, 255, 255, 0.3);
+    border-top: 8px solid #ff9900; /* Spinner color */
+    border-radius: 50%;
+    width: 80px; /* Increased size for better visibility */
+    height: 80px;
+    animation: spin 1s linear infinite; /* Spinner animation */
+    margin: 20px auto;
+}
+
+/* Text Animation */
+@keyframes textAnimation {
+    0%, 100% {
+        transform: scale(1);
+        color: #ff9900; /* Color change */
+    }
+    50% {
+        transform: scale(1.1);
+        color: #ffffff; /* Color change */
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>AI Interview Hub 2.0</h1>
+    <nav>
+        <button onclick="window.location.href='index.html'">Home</button>
+        <button onclick="window.location.href='about.html'">About Us</button>
+        <button onclick="window.location.href='contact.html'">Contact Us</button>
+        <button onclick="window.location.href='login.html'">Get Started</button>
+    </nav>
+</header>
+
+<main>
+    <!-- Loading Animation -->
+<div id="loading" class="loading-screen">
+    <div class="loading-content">
+        <h1 class="loading-text">Loading AI Interview Hub 2.0...</h1>
+        <div class="loading-spinner"></div>
+        <p class="loading-subtext">Please wait while we prepare your experience...</p>
+    </div>
+</div>
+    <div class="content">
+        <h2>Ace Your </h2>
+        <div class="typing-effect" id="typing"></div>
+        <h3 class="interview-title">Interviews</h3>
+        <p class="paragraph">Prepare for your interviews with real-time voice-to-voice mock interviews with the world's most advanced AI. Say goodbye to interview performance anxiety. Master any role, any level, any industry and land your dream job. Get detailed feedback on your answers and suggestions to improve them.</p>
+        <button class="cta-button" onclick="window.location.href='login.html'">Try a Free Interview Now</button>
+    </div>
+    <div class="robot-video-container">
+        <div class="robot-video">
+            <video id="robotVideo" src="robot6.mp4" autoplay muted loop></video>
+        </div>
+    </div>
+</main>
+    <script>
+        document.addEventListener('click', function () {
+            let video = document.getElementById('robotVideo');
+            video.muted = false; 
+        }, { once: true }); 
+    </script>
+    
+<!-- YouTube Video Section -->
+<div class="youtube-video">
+    <h2>How AI Interview Hub 2.0 Works</h2>
+    <iframe width="560" height="315" src="https://youtu.be/AOgoxVQTYgs?si=QXozItvBYfnHKx7h" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+<div class="faq-container">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+        <button class="faq-button" onclick="toggleFAQ(this)">What is AI Interview Hub 2.0?</button>
+        <div class="faq-content">
+            <p>AI Interview Hub 2.0 is an advanced AI-powered platform that offers personalized voice-to-voice mock interviews for various industries and roles. It helps job seekers practice and improve their interview skills to boost their confidence and increase their chances of landing their dream job.</p>
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <button class="faq-button" onclick="toggleFAQ(this)">Can I practice interviews for any job in any industry?</button>
+        <div class="faq-content">
+            <p>Yes, AI Interview Hub 2.0 allows you to practice interviews for any job in any industry. The platform is designed to be versatile and adaptable, making it suitable for a wide range of roles and sectors.</p>
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <button class="faq-button" onclick="toggleFAQ(this)">How does AI Interview Hub 2.0 ensure the relevance of interview questions?</button>
+        <div class="faq-content">
+            <p>The AI adapts the interview questions based on the job description you provide. This ensures that the questions are tailored to the specific role you are preparing for, making the practice sessions more relevant and effective.</p>
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <button class="faq-button" onclick="toggleFAQ(this)">How can I contact customer support?</button>
+        <div class="faq-content">
+            <p>If you have any questions or need assistance, you can contact our customer support team through the contact form on our website or by emailing info@aiinterviewhub. We are here to help!</p>
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <button class="faq-button" onclick="toggleFAQ(this)">How do I set myself up for success with AI Interview Hub 2.0?</button>
+        <div class="faq-content">
+            <p>
+                <ul>
+                    <li>Prepare Your Job Description: Ensure you have the job description ready before starting the mock interview. This helps the AI tailor the questions more accurately.</li>
+                    <li>Review Feedback Thoroughly: Take the time to review the detailed feedback provided after each interview to understand your performance better and identify areas for improvement.</li>
+                    <li>Practice Regularly: Consistency is key. Regular practice with AI Interview Hub 2.0 can help you build confidence and improve your interview skills over time.</li>
+                    <li>Take Advantage of Different Interview Rounds: Practice various types of interviews (HR, Behavioral, Technical, Leadership) to prepare comprehensively for any interview scenario.</li>
+                </ul>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="question.js"></script>
+<script src="script.js"></script>
+
+<!-- Follow Our Journey Section -->
+<section class="social-media">
+    <h2>Follow Our Journey</h2>
+    <div class="social-icons">
+        <a href="https://www.instagram.com/ai_interview_hub?igsh=ZG10OXVwNnZqZmsz" target="_blank" title="Instagram">
+            <img src="instagram.com.png" alt="Instagram Icon" />
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=61566321916501&mibextid=ZbWKwL" target="_blank" title="Facebook">
+            <img src="facebook.png" alt="Facebook Icon" />
+        </a>
+        <a href="https://www.linkedin.com/in/ai-interview-hub" target="_blank" title="LinkedIn">
+            <img src="linkedin.png" alt="LinkedIn Icon" />
+        </a>
+        <a href="https://x.com/AIINTERVIEWHUB/with_replies" target="_blank" title="Twitter">
+            <img src="twitter.png" alt="Twitter Icon" />
+        </a>
+        
+    </div>
+</section>
+
+
+<script>
+    const keywords = ["Data Science", "Medical", "Leadership", "Business", "Hospitality", "Software", "Engineering"];
+let index = 0, charIndex = 0;
+const typingElement = document.getElementById("typing");
+
+function type() {
+    if (charIndex < keywords[index].length) {
+        typingElement.textContent += keywords[index].charAt(charIndex);
+        charIndex++;
+        setTimeout(type, 100);
+    } else {
+        setTimeout(erase, 1000);
+    }
+}
+
+function erase() {
+    if (charIndex > 0) {
+        typingElement.textContent = keywords[index].substring(0, charIndex - 1);
+        charIndex--;
+        setTimeout(erase, 100);
+    } else {
+        index = (index + 1) % keywords.length;
+        setTimeout(type, 500);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', type);
+
+    
+</script>
+
+
+</body>
+</html>

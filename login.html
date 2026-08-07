@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    
+	<link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="login.css">
+    
+    <title>
+      LOGIN PAGE | AI Interview Hub 2.0 - Practice Real-time Voice Interviews with AI
+    </title>
+    <link rel="icon" href="icon.png" type="image/x-icon">
+    <meta
+      name="description"
+      content="LOGIN PAGE AI Interview Hub 2.0 | Real-time voice-to-voice mock interviews with AI for any job title and industry with in-depth AI feedback on performance. Use AI Interview Hub 2.0 for free."
+    />
+    
+</head>
+<body>
+  <!-- Loading Animation -->
+<div id="loading" class="loading-screen">
+  <div class="loading-content">
+      <h1 class="loading-text">Loading AI Interview Hub 2.0...</h1>
+      <div class="loading-spinner"></div>
+      <p class="loading-subtext">Please wait while we prepare your experience...</p>
+  </div>
+</div>
+  <video autoplay muted loop id="background-video">
+    <source src="login2.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+  <div class="section">
+    <div class="container">
+      <div class="row full-height justify-content-center">
+        <div class="col-12 text-center align-self-center py-5">
+          <div class="section pb-5 pt-5 pt-sm-2 text-center">
+            <h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
+            <input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
+            <label for="reg-log"></label>
+            <div class="card-3d-wrap mx-auto">
+              <div class="card-3d-wrapper">
+                <!-- Login Form -->
+                <div class="card-front">
+                  <div class="center-wrap">
+                    <div class="section text-center">
+                      <h4 class="mb-4 pb-3">Log In</h4>
+                      <form id="login-form">
+                        <div class="form-group">
+                          <input type="email" class="form-style" placeholder="Email" id="login-email">
+                          <i class="input-icon uil uil-at"></i>
+                        </div>  
+                        <div class="form-group mt-2">
+                          <input type="password" class="form-style" placeholder="Password" id="login-password">
+                          <i class="input-icon uil uil-lock-alt"></i>
+                        </div>
+                        <a href="#" class="btn mt-4" id="login-btn">Login</a>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Signup Form -->
+                <div class="card-back">
+                  <div class="center-wrap">
+                    <div class="section text-center">
+                      <h4 class="mb-3 pb-3">Sign Up</h4>
+                      <form id="signup-form">
+                        <div class="form-group">
+                          <input type="text" class="form-style" placeholder="Full Name" id="signup-name">
+                          <i class="input-icon uil uil-user"></i>
+                        </div>  
+                        <div class="form-group mt-2">
+                          <input type="tel" class="form-style" placeholder="Phone Number" id="signup-phone">
+                          <i class="input-icon uil uil-phone"></i>
+                        </div>  
+                        <div class="form-group mt-2">
+                          <input type="email" class="form-style" placeholder="Email" id="signup-email">
+                          <i class="input-icon uil uil-at"></i>
+                        </div>
+                        <div class="form-group mt-2">
+                          <input type="password" class="form-style" placeholder="Password" id="signup-password">
+                          <i class="input-icon uil uil-lock-alt"></i>
+                        </div>
+                        <a href="#" class="btn mt-4" id="register-btn">Register</a>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+    #background-video {
+  position: fixed;
+  top: 0; /* instead of right: 0; and bottom: 0; */
+  left: 0;
+  width: 100%; /* make it full width */
+  height: 100vh; /* make it full height */
+  object-fit: cover; /* maintain aspect ratio and cover the screen */
+  z-index: -1; /* place the video behind other content */
+  filter: brightness(0.7); /* optional: darken the video for better text readability */
+}
+  </style>
+  
+  <script>
+    // Hide loading screen on page load
+window.addEventListener('load', function () {
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.opacity = '0'; // Fade out
+    setTimeout(() => {
+        loadingScreen.style.display = 'none'; // Hide after fade out
+    }, 500); // Match with CSS transition duration
+});
+
+// Show loading screen on network issues
+window.addEventListener('beforeunload', function() {
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.display = 'flex'; // Show loading screen
+});
+
+// Show loading screen on login button click
+const loginButton = document.getElementById('login-btn');
+loginButton.addEventListener('click', function() {
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.display = 'flex'; // Show loading screen
+});
+    
+    const signupButton = document.getElementById('register-btn');
+
+    // Email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Password strength: At least 8 characters
+    const passwordRegex = /^.{8,}$/;
+
+    signupButton.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const fullNameInput = document.getElementById('signup-name').value;
+      const phoneInput = document.getElementById('signup-phone').value;
+      const emailInput = document.getElementById('signup-email').value;
+      const passwordInput = document.getElementById('signup-password').value;
+
+      if (!fullNameInput || !phoneInput || !emailInput || !passwordInput) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      if (!/^\d{10}$/.test(phoneInput)) {
+        alert('Phone number must be exactly 10 digits');
+        return;
+      }
+
+      if (!emailRegex.test(emailInput)) {
+        alert('Please enter a valid email');
+        return;
+      }
+
+      if (!passwordRegex.test(passwordInput)) {
+        alert('Password must be at least 8 characters long');
+        return;
+      }
+
+      // Store the registered credentials in localStorage
+      localStorage.setItem('registeredEmail', emailInput);
+      localStorage.setItem('registeredPassword', passwordInput);
+
+      // Redirect to login page if registration is successful
+      window.location.href = 'login.html';
+    });
+
+    loginButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      const emailInput = document.getElementById('login-email').value;
+      const passwordInput = document.getElementById('login-password').value;
+
+      if (!emailInput || !passwordInput) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      if (!emailRegex.test(emailInput)) {
+        alert('Please enter a valid email');
+        return;
+      }
+
+      if (!passwordRegex.test(passwordInput)) {
+        alert('Password must be at least 8 characters long');
+        return;
+      }
+
+      // Get stored credentials from localStorage
+      const storedEmail = localStorage.getItem('registeredEmail');
+      const storedPassword = localStorage.getItem('registeredPassword');
+
+      // Check if the login credentials match the sign-up credentials
+      if (emailInput === storedEmail && passwordInput === storedPassword) {
+        // Redirect to Interview.html if login is successful
+        window.location.href = 'resume.html';
+      } else {
+        alert('Invalid email or password');
+      }
+    });
+    
+  </script>
+  
+	</body>
+  </html>
+  
+
