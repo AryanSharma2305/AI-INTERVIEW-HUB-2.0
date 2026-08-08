@@ -220,6 +220,22 @@
     0% { opacity: 0; }
     100% { opacity: 1; }
 }
+.demo-video {
+    margin: 50px 0;
+    text-align: center;
+}
+
+.demo-video h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.demo-video video {
+    width: 90%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 12px;
+}
     </style>
 </head>
 <body>
@@ -264,19 +280,19 @@
     </script>
     
 <!-- YouTube Video Section -->
+<!-- Project Demo Video Section -->
 <div class="youtube-video">
     <h2>How AI Interview Hub 2.0 Works</h2>
-    <iframe
-    width="560"
-    height="315"
-    src="https://youtu.be/US0VWPbyEo8"
-    title="How AI Interview Hub 2.0 Works"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowfullscreen>
-</iframe>
-</div>
 
+    <video
+        width="560"
+        controls
+        preload="metadata">
+        <source src="AIVIDEO.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+<div class="demo-video"></div>
 <div class="faq-container">
     <h2>Frequently Asked Questions</h2>
 
